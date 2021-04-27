@@ -1,5 +1,12 @@
 FROM wyveo/nginx-php-fpm:php74
 
+WORKDIR /usr/share/nginx/
+RUN rm -rf /usr/share/nginx/html
+
+COPY . /usr/share/nginx
+
+# NGINX Config http://localhost/*
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -34,3 +41,5 @@ RUN echo "; priority=20\nextension=sqlsrv.so\n" > /etc/php/7.4/mods-available/sq
 RUN echo "; priority=30\nextension=pdo_sqlsrv.so\n" > /etc/php/7.4/mods-available/pdo_sqlsrv.ini
 
 RUN phpenmod sqlsrv pdo_sqlsrv
+
+RUN ln -s public html
